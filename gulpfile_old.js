@@ -10,7 +10,6 @@ const dist_server="C:/OpenServer/domains/irvas";
 gulp.task("copy-html", () => {
     return gulp.src("./src/index.html")
                 .pipe(gulp.dest(dist))
-                .pipe(gulp.dest(dist_server))
                 .pipe(browsersync.stream());
 });
 
@@ -43,14 +42,12 @@ gulp.task("build-js", () => {
                       }
                 }))
                 .pipe(gulp.dest(dist))
-                .pipe(gulp.dest(dist_server))
                 .on("end", browsersync.reload);
 });
 
 gulp.task("copy-assets", () => {
     return gulp.src("./src/assets/**/*.*")
                 .pipe(gulp.dest(dist + "/assets"))
-                .pipe(gulp.dest(dist_server + "/assets"))
                 .on("end", browsersync.reload);
 });
 
