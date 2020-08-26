@@ -1,5 +1,3 @@
-import tabs from './tabs';
-
 const calculator = () => {
   const calcWindow = document.querySelector('.popup_calc');
   const profileWindow = document.querySelector('.popup_calc_profile');
@@ -20,9 +18,33 @@ const calculator = () => {
   calcButtons.forEach((btn) => {
     btn.addEventListener('click', () => {
       calcWindow.style.display = 'block';
-      tabs('.balcon_icons', '.balcon_icons_img', '.big_img', 'do_image_more');
+      activeWindow = calcWindow;
+      showImage(1);
     });
   });
+
+  // установить активную иконку
+  function setActiveIcon(i=0) {
+    icons.forEach(item => item.classList.remove("do_image_more"));
+    icons[i].classList.add("do_image_more");
+  }
+
+  // для всех иконок в окне расчета по клику отобразить большую картинку
+  icons.forEach((item, i) => {
+    item.addEventListener('click', (e) => {
+      const target = e.target;
+      if (target && (target.classList.contains("balcon_icons_img") ||
+        target.parentNode.classList.contains("balcon_icons_img"))) {
+        setActiveIcon(i);
+        showImage(i + 1);
+      }
+    });
+  });
+
+  function showImage(i = 1) {
+    bigImages.innerHTML = `<img src="assets/img/modal_calc/balkon/type${i}.png" alt="Тип${i}">`;
+    bigImages.childNodes[0].style.display = 'block';
+  }
 
   // кнопки закрытия окон. Окна отбираются по массиву стилей всех окон. Закрывается активное окно.
   closeButtons.forEach(closeStyle => {
@@ -72,16 +94,15 @@ const calculator = () => {
     field.setAttribute("type","hidden");
     field.setAttribute("name",name);
     field.setAttribute("value",value);
-    field.setAttribute('view_type',document.querySelector('#view_type').value);
     form.append(field);
-  }
 
+  }
   buttonEnd.addEventListener('click', () => {
     if (boxCold.checked || boxWarm.checked) {
       profileWindow.style.display = 'none';
       endWindow.style.display = 'block';
       activeWindow = endWindow;
-      // теперь в форму надо добавить скрытые поля: width, height, type (warm/cold) и view_type
+      // теперь в форму надо добавить скрытые поля: width, height, type (warm/cold)
       const form = document.querySelector('#end_form');
       addField(form,"width",inputWidth.value);
       addField(form,"height",inputHeight.value);
