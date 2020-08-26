@@ -12,9 +12,8 @@ const forms = () => {
   phones.forEach(item => {
     item.addEventListener('input',() => {
       item.value = item.value.replace(/\D/g,"");
-
-    })
-  })
+    });
+  });
 
   allForms.forEach((form => form.addEventListener('submit', (e) => {
     e.preventDefault();
@@ -32,12 +31,12 @@ const forms = () => {
         body: data
       });
       return await res.text();
-    } // postData
+    }; // postData
 
 
     const data = new FormData(form);
-    //postData("http://food/server.php", data)
-      postData('assets/server.php',data)
+    postData("http://food/server.php", data)
+      //postData('assets/server.php',data)
       .then(res => {
         console.log(res);
         statusMessage.textContent = message.success;
@@ -47,11 +46,11 @@ const forms = () => {
       })
       .finally(() => {
         form.reset();
-        setTimeout(() => { statusMessage.remove() }, 5000);
-      })
+        setTimeout(() => { statusMessage.remove(); }, 5000);
+      });
 
 
-  })))
-}
+  })));
+};
 
 export default forms;

@@ -6,14 +6,14 @@ const tabs = (headerSelector, tabSelector, contentSelector, activeClass = null) 
   const hideContent = () => {
     content.forEach(item => {
       item.style.display = 'none';
-    })
+    });
     tabs.forEach(item => item.classList.remove(activeClass));
-  }
+  };
 
   const showContent = (i = 0) => {
     content[i].style.display = 'block';
     tabs[i].classList.add(activeClass);
-  }
+  };
 
   header.addEventListener('click', (e) => {
     const target = e.target;
@@ -27,11 +27,11 @@ const tabs = (headerSelector, tabSelector, contentSelector, activeClass = null) 
         }
       });
     }
-  }) // addEventListener
+  }); // addEventListener
 
 
   hideContent();
   showContent();
-}
+};
 
 export default tabs;
