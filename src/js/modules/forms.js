@@ -1,19 +1,21 @@
+import {checkInputAsNumber} from './checks';
 // Обработка формы и отправка на сервер
 const forms = () => {
   const allForms = document.querySelectorAll('form');
-  const allInputs = document.querySelectorAll('input');
-  const phones = document.querySelectorAll('input[name="user_phone"]');
+  //const allInputs = document.querySelectorAll('input');
+  //const phones = document.querySelectorAll('input[name="user_phone"]');
   const message = {
     loading: 'Загрузка...',
     success: 'Спасибо! С вами скоро свяжутся',
     error: 'Извините, произошла какая-то ошибка'
   };
   // проверяем, что телефоны - цифры
-  phones.forEach(item => {
-    item.addEventListener('input',() => {
-      item.value = item.value.replace(/\D/g,"");
-    });
-  });
+  // phones.forEach(item => {
+  //   item.addEventListener('input',() => {
+  //     item.value = item.value.replace(/\D/g,"");
+  //   });
+  // });
+  checkInputAsNumber('input[name="user_phone"]');
 
   allForms.forEach((form => form.addEventListener('submit', (e) => {
     e.preventDefault();
