@@ -1,4 +1,4 @@
-const modals = () => {
+const modals = (timer) => {
   // bindModal() отвечает за привязку окна к триггеру
   function bindModal(triggerSelector, modalSelector, closeSelector, closeOnOverlay = true) {
     const openButtons = document.querySelectorAll(triggerSelector),
@@ -19,7 +19,7 @@ const modals = () => {
         // сначала скрываем все окна
         allWindows.forEach((window) => { window.style.display = 'none'; });
         // чтобы скроллить только модальное окно, а не всю страницу
-        modalWindow.style.display='block';
+        modalWindow.style.display = 'block';
         document.body.style.overflow = 'hidden';
 
       });
@@ -41,9 +41,9 @@ const modals = () => {
 
   // показать окно через 60 сек.
   const showModalAfterTimeout = (selector, timeout) => {
-    setTimeout(() => {
+    return setTimeout(() => {
       document.querySelector(selector).style.display = 'block';
-      document.querySelector(selector).overflow = 'hidden';
+      document.body.style.overflow = 'hidden';
     }, timeout);
   };
 
@@ -54,7 +54,20 @@ const modals = () => {
   bindModal('.popup_calc_button', '.popup_calc_profile', '.popup_calc_profile_close', false);
   bindModal('.popup_calc_profile_button', '.popup_calc_end', '.popup_calc_end_close', false);
 
-  showModalAfterTimeout('.popup', 60000);
+  timer.timerId = showModalAfterTimeout('.popup', 60000);
+  console.log('setting timer', timer);
+};
+
+export const closeWindow = (selector) => {
+  if(!selector) { return; }
+  if (typeof selector === 'string') {
+    document.querySelector(selector).style.display = 'none';
+    document.querySelector(selector).overflow = '';
+  } else {
+    selector.style.display = 'none';
+    document.body.style.overflow = '';
+  }
 };
 
 export default modals;
+

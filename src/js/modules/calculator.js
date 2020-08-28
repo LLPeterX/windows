@@ -1,101 +1,66 @@
-import tabs from './tabs';
+import { checkInputAsNumber } from './checks';
 
-// teacher variant
-const calculator = () => {
-  //const calcWindow = document.querySelector('.popup_calc');
-  const profileWindow = document.querySelector('.popup_calc_profile');
-  //const calcButtons = document.querySelectorAll('.popup_calc_btn');
-  //const closeButtons = ['.popup_calc_close', '.popup_calc_profile_close', '.popup_calc_end_close'];
-  //const profileButton = document.querySelector('.popup_calc_button');
-  //const icons = document.querySelectorAll('.balcon_icons_img');
-  //const bigImages = document.querySelector('.big_img');
-  const inputWidth = document.querySelector('#width'),
-    inputHeight = document.querySelector('#height'),
-    checkBoxes = document.querySelectorAll('.checkbox');
-  const endWindow = document.querySelector(".popup_calc_end");
-  const buttonEnd = document.querySelector('.popup_calc_profile_button');
-  let activeWindow = null;
+const changeState = (state) => {
+  const windowForm = document.querySelectorAll('.balcon_icons_img'),
+    windowWidth = document.querySelectorAll('#width'), // All() - для forEach(), чтобы не заморачиваться с индивидуалами
+    windowHeight = document.querySelectorAll('#height'),
+    windowType = document.querySelectorAll('#view_type'),
+    windowProfile = document.querySelectorAll('.checkbox');
 
-  // my variant
-  // слушатели на все возможные кнопки открытия окна
-  // кнопки "Рассчитать": открыть окно расчета
-  /*
-  calcButtons.forEach((btn) => {
-    btn.addEventListener('click', () => {
-      calcWindow.style.display = 'block';
-      tabs('.balcon_icons', '.balcon_icons_img', '.big_img', 'do_image_more');
-    });
-  });
+  checkInputAsNumber('#width');
+  checkInputAsNumber('#height');
 
-  // кнопки закрытия окон. Окна отбираются по массиву стилей всех окон. Закрывается активное окно.
-  closeButtons.forEach(closeStyle => {
-    document.querySelector(closeStyle).addEventListener('click',() => {
-      if(activeWindow) {
-        activeWindow.style.display='none';
-        activeWindow=null;
-      }
-    });
-  });
-*/
-/*
-  inputWidth.addEventListener('input', () => {
-    inputWidth.value = inputWidth.value.replace(/\D/g, "");
-  });
-  inputHeight.addEventListener('input', () => {
-    inputHeight.value = inputHeight.value.replace(/\D/g, "");
-  });
-*/
-  const boxCold = checkBoxes[0],
-    boxWarm = checkBoxes[1];
-
-  const switchBoxes = (target) => {
-    if (target == boxCold) {
-      boxWarm.checked = !boxCold.checked;
-    } else {
-      boxCold.checked = !boxWarm.checked;
+  // значения по умолчанию для отдельных полей/селекторов ввода
+  const setDefaultValues = () => {
+    // значение по умолчанию для SELECT = 0 (Тип1) - форма окна
+    if (state.form == undefined) {
+      state.form = 'Тип1';
+    }
+    if (state.profile == undefined) { // профиль. по умолчанию 2-й, "теплое"
+      state.profile = 'Теплое'; // второй элемент
+      windowProfile[1].checked = true;
+    }
+    if (state.type == undefined) { // тип 
+      state.type = windowType[0].value = 'aluminum';
     }
   };
 
-  checkBoxes.forEach(item => item.addEventListener('change', (e) => {
-    switchBoxes(e.target);
-  }));
-/*
-  profileButton.addEventListener('click', () => {
-    const width = +inputWidth.value;
-    const height = +inputHeight.value;
-    if (!isNaN(width) && !isNaN(height) && width > 0 && height > 0) {
-      // hide current window and show profile
-      //calcWindow.style.display = 'none';
-      profileWindow.style.display = 'block';
-      activeWindow = profileWindow;
-    }
-  });
-*/
-  // Для отправки дополнительных данных (ширина, высота, тип) добавляем в форму <input type="hidden">
-  function addField(form, name, value) {
-    const field = document.createElement("input");
-    field.setAttribute("type","hidden");
-    field.setAttribute("name",name);
-    field.setAttribute("value",value);
-    form.append(field);
-  }
+  const bindActionToElements = (event, elements, prop) => {
+    elements.forEach((item, i) => {
+      item.addEventListener(event, () => {
+        switch (item.nodeName) {
+          case 'SPAN': // иконки формы балкона
+            state[prop] = `Тип${i + 1}`;
+            break;
+          case 'INPUT': // либо профиль (холодное/теплое), либо размеры (width & height)
+            if (item.getAttribute('type') === 'checkbox') { // профиль
+              state[prop] = (i === 0) ? 'Холодное' : 'Теплое';
+              // чтобы можно было вбрать только один чекбокс, сначала снимаем все метки,
+              // а потом выбираем тот, на который кликнули (elements[i])
+              elements.forEach(checkbox => checkbox.checked = false);
+              elements[i].checked = true;
+            } else { // размеры - width & height
+              state[prop] = item.value;
+            }
+            break;
+          case 'SELECT': // тип (алюминий, дерево и т.п) 
+            state[prop] = item.value;
+            break;
+          default:
+            break;
+        }
+        console.log(state);
+      });
+    });
+  };
 
-  buttonEnd.addEventListener('click', () => {
-    if (boxCold.checked || boxWarm.checked) {
-      profileWindow.style.display = 'none';
-      endWindow.style.display = 'block';
-      activeWindow = endWindow;
-      // теперь в форму надо добавить скрытые поля: width, height, type (warm/cold) и view_type
-      const form = document.querySelector('#end_form');
-      addField(form,"width",inputWidth.value);
-      addField(form,"height",inputHeight.value);
-      addField(form,"type",boxCold.checked ? 'cold' : 'warm');
-      addField(form,"view_type", document.querySelector('#view_type').value);
-    }
-
-  });
-
+  setDefaultValues();
+  bindActionToElements('click', windowForm, 'form');
+  bindActionToElements('input', windowWidth, 'width');
+  bindActionToElements('input', windowHeight, 'height');
+  bindActionToElements('change', windowType, 'type');
+  bindActionToElements('change', windowProfile, 'profile');
 
 };
 
-export default calculator;
+export default changeState;
