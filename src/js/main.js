@@ -4,6 +4,7 @@ import forms from './modules/forms';
 import tabs from './modules/tabs';
 import calculator from './modules/calculator';
 import promotionTimer from './modules/promoTimer';
+import OurWorks from './modules/works';
 
 window.addEventListener('DOMContentLoaded', () => {
   // стейт для расчета стоимости остекления. Данные передаются при submit формы calc_end
@@ -19,5 +20,6 @@ window.addEventListener('DOMContentLoaded', () => {
   forms(modalState, timer);
   //promotionTimer('2020-08-01 00:00'); // не показывает вообще, т.к. дата прошла
   promotionTimer('2020-09-01 00:00');
+  OurWorks();
 
 });
