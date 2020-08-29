@@ -55,6 +55,7 @@ const forms = (state, timer) => {
       for (let prop in state) {
         data.append(prop, state[prop]);
       }
+      data.append('date',new Date()); // дата поста
     }
 
     // отправляем данные на сервер
