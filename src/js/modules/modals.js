@@ -5,12 +5,8 @@ const modals = (timer) => {
       modalWindow = document.querySelector(modalSelector),
       closeBtn = document.querySelector(closeSelector),
       allWindows = document.querySelectorAll('[data-modal]');
+    let scrollWidth = getScrollWidth();  
 
-    // const closeWindow = (el) => {
-    //   el.style.display = 'none';
-    //   document.body.style.overflow = '';
-    // };
-    // клик на элемент открытия окна
     openButtons.forEach((openBtn) => {
       openBtn.addEventListener('click', (e) => {
         if (e.target) {
@@ -21,6 +17,7 @@ const modals = (timer) => {
         // чтобы скроллить только модальное окно, а не всю страницу
         modalWindow.style.display = 'block';
         document.body.style.overflow = 'hidden';
+        document.body.style.marginRight=scrollWidth+'px';
 
       });
     });
@@ -28,6 +25,7 @@ const modals = (timer) => {
     closeBtn.addEventListener('click', () => {
       allWindows.forEach(window => window.style.display = 'none');
       document.body.style.overflow = '';
+      document.body.style.marginRight='0px';
     });
 
     // клик на подложку
@@ -35,6 +33,7 @@ const modals = (timer) => {
       if (e.target === modalWindow && closeOnOverlay) {
         allWindows.forEach(window => { window.style.display = 'none'; });
         document.body.style.overflow = '';
+        document.body.style.marginRight='0px';
       }
     });
   }
@@ -58,7 +57,7 @@ const modals = (timer) => {
 };
 
 export const closeWindow = (selector) => {
-  if(!selector) { return; }
+  if (!selector) { return; }
   if (typeof selector === 'string') {
     document.querySelector(selector).style.display = 'none';
     document.querySelector(selector).overflow = '';
@@ -66,7 +65,22 @@ export const closeWindow = (selector) => {
     selector.style.display = 'none';
     document.body.style.overflow = '';
   }
+  document.body.style.marginRight='0px';
 };
+
+// Вычисляем ширину вертикального скроллбара
+// для этого создаем пустой скрытый квадратный div
+function getScrollWidth() {
+  let emptyDiv = document.createElement('div');
+  emptyDiv.style.width = emptyDiv.style.height = "50px";
+  emptyDiv.style.overflowY='scroll';
+  emptyDiv.style.visibility='hidden';
+  document.body.appendChild(emptyDiv);
+  let scrollWidth = emptyDiv.offsetWidth - emptyDiv.clientWidth;
+  emptyDiv.remove();
+  //console.log('scrollW=',scrollWidth);
+  return scrollWidth;
+}
 
 export default modals;
 
